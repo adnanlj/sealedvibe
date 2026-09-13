@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ananya & Kabir — Our Wedding Celebration</title>
+    <meta name="description" content="Join us in celebrating the union of Ananya Sharma & Kabir Mehra in Udaipur, Rajasthan. A celebration of love, heritage, and forever." />
+    
+    <!-- Open Graph / Facebook / WhatsApp -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Ananya & Kabir — Our Wedding Celebration" />
+    <meta property="og:description" content="Two souls. One beautiful beginning. Join our celebration in Udaipur, Rajasthan." />
+    <meta property="og:image" content="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1200&q=80" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:title" content="Ananya & Kabir — Our Wedding" />
+    <meta property="twitter:description" content="Two souls. One beautiful beginning. Join our celebration in Udaipur, Rajasthan." />
+    <meta property="twitter:image" content="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1200&q=80" />
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Cinzel:wght@400;500;600;700;800&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script type="module" crossorigin src="/assets/index-D0fIH21V.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-cB3hw7DX.css">
+  </head>
+  <body class="bg-ivory text-charcoal font-sans antialiased selection:bg-burgundy-800 selection:text-gold-200 overflow-x-hidden">
+    <div id="root"></div>
+  </body>
+</html>
