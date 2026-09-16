@@ -1,390 +1,421 @@
-# 🌟 SealedVibe — Comprehensive System Architecture & Engineering Blueprint
+# 🏛️ SealedVibe — Master System Architecture & Engineering Blueprint
+
+> **A Comprehensive Guide to the High-Level, Low-Level, AI, and Rendering Architecture of SealedVibe**
 
 ---
 
-## 1. Executive Summary & System Vision
-
-**SealedVibe** is a high-performance, emotionally immersive web platform that turns raw personal memories, apologies, romantic proposals, and celebrations into cinematic **3D interactive web experiences**. 
-
-The system operates without manual coding per website: a creator provides basic relationship facts and optional pop-culture fandoms, an ultra-fast LLM engine (Groq) synthesizes structured story modules, and our dynamic client-side 3D rendering engine injects the data into an interactive 3D universe with background music, physics-based animations, and real-time read/response tracking.
+## 📑 Table of Contents
+1. [System Overview & Core Philosophy](#1-system-overview--core-philosophy)
+2. [High-Level Architecture (Visual Diagram)](#2-high-level-architecture-visual-diagram)
+3. [End-to-End User Journey & Data Flow](#3-end-to-end-user-journey--data-flow)
+4. [The AI Story-Weaving & Fanbase Engine (Groq LPU)](#4-the-ai-story-weaving--fanbase-engine-groq-lpu)
+5. [The No-Code 3D Engine & Dynamic Slot Injection](#5-the-no-code-3d-engine--dynamic-slot-injection)
+6. [Low-Level Database Architecture & Entity Models](#6-low-level-database-architecture--entity-models)
+7. [Digital Audio Processing (Web Audio API Synthesizer)](#7-digital-audio-processing-web-audio-api-synthesizer)
+8. [60-FPS Canvas Physics & Particle Simulation](#8-60-fps-canvas-physics--particle-simulation)
+9. [Recipient Unboxing: 3D Envelope Finite State Machine](#9-recipient-unboxing-3d-envelope-finite-state-machine)
+10. [Cashfree Payment Lifecycle & Concurrency Control](#10-cashfree-payment-lifecycle--concurrency-control)
+11. [Security, Authentication & Rate-Limiting Shield](#11-security-authentication--rate-limiting-shield)
+12. [Cloud Infrastructure, Vercel Serverless & Deployment](#12-cloud-infrastructure-vercel-serverless--deployment)
 
 ---
 
-## 2. High-Level Architecture (HLA)
+## 1. System Overview & Core Philosophy
 
-```mermaid
-graph TD
-    subgraph ClientLayer["1. Client Devices (Web / Mobile)"]
-        Creator["👨‍💻 Creator (Studio / Dashboard)"]
-        Recipient["👩‍❤️‍👨 Recipient (3D Interactive Website)"]
-    end
+**SealedVibe** is an emotionally immersive, dynamic web experience platform that converts simple memories, confessions, romantic proposals, apologies, and event invitations into **living, interactive 3D digital keepsakes**.
 
-    subgraph EdgeLayer["2. Vercel Global Edge & CDN Network"]
-        CDN["🌐 Edge CDN (Static Assets / Fonts / Media Cache)"]
-        SecurityHeaders["🛡️ Security Gateway (HSTS, CSP, FrameGuard)"]
-    end
+### 🌟 The Core Innovation: Zero Manual Coding
+Traditional web design requires writing HTML, CSS, and animations for each client. SealedVibe replaces this with a **Two-Tier Engine**:
+* **Tier 1 (The AI Story Architect)**: Uses high-speed LLM inference (Groq) with invisible system prompts to structure raw personal thoughts and pop-culture fandoms into standardized JSON data blocks.
+* **Tier 2 (The Client-Side 3D Skeleton Engine)**: A pre-built, GPU-accelerated interactive web component (`RomanticProposal.tsx` / `ApologyClient.tsx`) that pulls the JSON from the database and dynamically slots names, vows, songs, and physics games into place in milliseconds.
 
-    subgraph ComputeLayer["3. Serverless Application Engine (Next.js 16)"]
-        AuthService["🔐 Auth & JWT Service (Google OAuth / Bcrypt)"]
-        AIDirector["🤖 AI Content Pipeline (/api/generate, /api/generate-draft)"]
-        PaymentService["💳 Cashfree PG Engine (/api/payments/cashfree/*)"]
-        TrackingService["📊 Real-Time Analytics & Tracking (/api/track, /api/respond-proposal)"]
-    end
+---
 
-    subgraph ExternalServices["4. Cloud & 3rd-Party Infrastructure"]
-        GroqPool["⚡ Groq AI Pool (Llama-3 High-Speed LPU Inference)"]
-        CashfreeAPI["🏦 Cashfree Payment Gateway (v3 Standard Checkout)"]
-        UnsplashCDN["📸 Unsplash API (Aesthetic Landscape Backdrop Engine)"]
-        SMTPMail["✉️ Nodemailer / SMTP Server (Transactional Alerts)"]
-    end
+## 2. High-Level Architecture (Visual Diagram)
 
-    subgraph PersistenceLayer["5. Database Cloud (MongoDB Atlas)"]
-        MongooseConn["🔌 Cached Global Mongoose Connection Pool"]
-        DB_Apology[("📁 Apologies / Keepsakes")]
-        DB_User[("👤 Users & Wallets")]
-        DB_Order[("🧾 Orders & Receipts")]
-        DB_RateLimit[("⏱️ Rate Limit Records (TTL)")]
-    end
+### 🗺️ Visual Architecture Map
 
-    Creator -->|HTTPS / REST| SecurityHeaders
-    Recipient -->|HTTPS / REST| SecurityHeaders
-    SecurityHeaders --> CDN
-    CDN --> ComputeLayer
-
-    AIDirector -->|Multi-Key Failover| GroqPool
-    AIDirector -->|Query Imagery| UnsplashCDN
-    PaymentService -->|Order Creation & Verification| CashfreeAPI
-    AuthService -->|Deliver Password Tokens| SMTPMail
-
-    ComputeLayer --> MongooseConn
-    MongooseConn --> DB_Apology
-    MongooseConn --> DB_User
-    MongooseConn --> DB_Order
-    MongooseConn --> DB_RateLimit
+```
+====================================================================================================
+                                      1. CLIENT ACCESS LAYER
+====================================================================================================
+       [ 👨‍💻 Creator Device ]                                  [ 👩‍❤️‍👨 Recipient Device ]
+   (Creates site, buys tokens,                             (Unseals 3D envelope, listens to
+    tracks real-time read receipts)                         music, interacts with vows & games)
+                 │                                                          │
+                 └──────────────────────────┬───────────────────────────────┘
+                                            ▼
+====================================================================================================
+                               2. EDGE ROUTING & SECURITY LAYER
+====================================================================================================
+                        ┌──────────────────────────────────────┐
+                        │      VERCEL GLOBAL EDGE NETWORK      │
+                        │ • Global CDN (Cached Images/Fonts)   │
+                        │ • DDoS Protection & HSTS Headers     │
+                        │ • Automatic HTTPS & SSL Termination  │
+                        └──────────────────┬───────────────────┘
+                                           ▼
+====================================================================================================
+                           3. SERVERLESS APPLICATION ENGINE (Next.js 16)
+====================================================================================================
+ ┌──────────────────────┐  ┌──────────────────────┐  ┌─────────────────────┐  ┌────────────────────┐
+ │  🔐 Auth & Sessions  │  │  🤖 AI Director API  │  │  💳 Cashfree Engine │  │ 📊 Tracking Engine │
+ │ • Google OAuth 2.0   │  │ • Multi-Key Failover │  │ • Order Generation  │  │ • First Open Time  │
+ │ • JWT HS256 Cookies  │  │ • JSON Structuring   │  │ • Signature Verify  │  │ • View Counter     │
+ │ • Bcrypt Hash (w:10) │  │ • Prompt Engineering │  │ • Atomic Token Add  │  │ • Response Notes   │
+ └──────────┬───────────┘  └──────────┬───────────┘  └──────────┬──────────┘  └─────────┬──────────┘
+            │                         │                         │                       │
+            └─────────────────────────┼─────────────────────────┼───────────────────────┘
+                                      ▼
+====================================================================================================
+                               4. THIRD-PARTY & CLOUD SERVICES
+====================================================================================================
+      ┌───────────────────────┐   ┌───────────────────────┐   ┌───────────────────────┐
+      │   ⚡ Groq AI Cloud    │   │  🏦 Cashfree Payment  │   │  📸 Unsplash CDN API  │
+      │ • Llama-3 70B Engine  │   │ • UPI, Cards, NetBank │   │ • Automatic Aesthetic │
+      │ • Sub-second Response │   │ • Webhook Verification│   │   Background Search   │
+      └───────────────────────┘   └───────────────────────┘   └───────────────────────┘
+                                      │
+====================================================================================================
+                               5. DATABASE & PERSISTENCE LAYER
+====================================================================================================
+                        ┌──────────────────────────────────────┐
+                        │         MONGODB ATLAS CLOUD          │
+                        │  (Global Cached Mongoose Connection) │
+                        ├──────────────────┬───────────────────┤
+                        │ • Users & Wallet │ • Orders & Trans  │
+                        │ • Keepsakes Data │ • IP Rate Limits  │
+                        └──────────────────┴───────────────────┘
 ```
 
 ---
 
-## 3. End-to-End System Workflow (Sequence Diagram)
+## 3. End-to-End User Journey & Data Flow
 
-```mermaid
-sequenceDiagram
-    autonumber
-    actor Creator as 👨‍💻 Creator
-    participant UI as 🖥️ SealedVibe Studio
-    participant API as ⚙️ Next.js Serverless API
-    participant Groq as ⚡ Groq AI (Llama 3)
-    participant DB as 🗄️ MongoDB Atlas
-    actor Recipient as 👩‍❤️‍👨 Recipient
-    participant 3DEngine as ✨ 3D Experience Engine
+Below is the step-by-step sequence of events from website creation to recipient response:
 
-    %% Creation Phase
-    Creator->>UI: Enters Partner Name, Memories & Fanbase ("Taylor Swift")
-    Creator->>UI: Clicks "Generate Draft" or "Create Website"
-    UI->>API: POST /api/generate (Payload + Auth Token)
-    API->>DB: Atomically check & deduct 1 user token ($gte: 1)
-    API->>Groq: Invokes Hidden Master Prompt with User Inputs
-    Groq-->>API: Returns Structured JSON (Chapters, Vows, Coupons, Metaphors)
-    API->>DB: Saves Keepsake Document with unique slug (/p/sara-7x8q)
-    API-->>UI: Returns { success: true, slug: "sara-7x8q" }
-    UI-->>Creator: Displays Share Link + Dynamic QR Code
-
-    %% Recipient Unboxing Phase
-    Creator->>Recipient: Sends Link via WhatsApp / Instagram
-    Recipient->>3DEngine: Opens https://sealedvibe.in/p/sara-7x8q
-    3DEngine->>API: GET /p/sara-7x8q data
-    API->>DB: Fetches document & increments viewCount
-    API->>DB: Stamps firstViewedAt timestamp
-    API-->>3DEngine: Injects JSON into 3D Animation Slots
-    3DEngine-->>Recipient: Unfolds 3D Wax Seal Envelope + Synthesizes Harp Audio
-    Recipient->>3DEngine: Interacts with Vows, Star Map, Coupons, Dodge "No" Button
-    Recipient->>3DEngine: Clicks "YES!" and types response note
-    3DEngine->>API: POST /api/respond-proposal { status: "accepted", note: "..." }
-    API->>DB: Updates responseStatus & responsePartnerNote
-    Creator->>UI: Views Creator Dashboard (Sees Read Receipt & Partner's Reply Live)
+```
+CREATOR                         SEALEDVIBE BACKEND                 GROQ AI / DB                 RECIPIENT
+   │                                     │                               │                          │
+   │─── 1. Enters names, memories, ─────>│                               │                          │
+   │       fandom ("Taylor Swift")       │                               │                          │
+   │                                     │─── 2. Invokes Master Prompt ─>│                          │
+   │                                     │       with invisible schema   │                          │
+   │                                     │<── 3. Returns Structured JSON ┤ (Groq)                   │
+   │                                     │       (Chapters, Vows, Quotes)│                          │
+   │                                     │                               │                          │
+   │                                     │─── 4. Saves to MongoDB ──────>│ (MongoDB)                │
+   │                                     │       under unique slug       │                          │
+   │<── 5. Receives live link ───────────┤                               │                          │
+   │       (sealedvibe.in/p/sara-7x8q)   │                               │                          │
+   │                                                                                                │
+   │─── 6. Sends link to Partner on WhatsApp / Instagram ──────────────────────────────────────────>│
+   │                                                                                                │
+   │                                     │<── 7. Opens URL & requests keepsake data ────────────────│
+   │                                     │─── 8. Sends JSON to recipient browser ──────────────────>│
+   │                                     │                                                          │
+   │                                     │                                                          │── 9. Browser synthesizes harp
+   │                                     │                                                          │   music, opens 3D wax seal,
+   │                                     │                                                          │   and renders falling petals
+   │                                     │                                                          │
+   │                                     │<── 10. Recipient clicks YES and types reply note ────────┤
+   │                                     │─── 11. Stores response note & timestamp in DB ──────────>│
+   │<── 12. Creator Dashboard updates ───┤
+   │       with live read receipt & note │
 ```
 
 ---
 
-## 4. Groq AI Story-Weaving & Fanbase Metaphor Engine
+## 4. The AI Story-Weaving & Fanbase Engine (Groq LPU)
 
-When the user enters raw inputs, the backend wraps them with a **Hidden Master System Prompt** before passing them to the Groq Multi-Key Pool.
+When a user provides basic input, our server does not send it raw to Groq. Instead, it wraps the data inside an **Invisible Master System Prompt** (`app/api/generate/route.ts` & `app/api/generate-draft/route.ts`).
 
-```mermaid
-flowchart TD
-    A[Raw Creator Inputs\n- Names\n- Memories\n- Fanbase: 'Harry Potter' / 'Taylor Swift'] --> B[API Backend\n/api/generate]
-    
-    subgraph MasterPromptWrap["Invisible Master System Prompt Construction"]
-        B --> C["1. Assign Persona:\n'Expert relationship writer & cinematic designer'"]
-        C --> D["2. Fandom Metaphor Directive:\n'Convert obsessions into poetic metaphors of connection'"]
-        D --> E["3. Output Contract:\n'Strict JSON Object Only — No markdown, no conversational text'"]
-    end
-    
-    MasterPromptWrap --> F[Groq Multi-Key Failover Pool\nlib/groqPool.ts]
-    F -->|Ultra-Fast LPU Inference| G[Meta Llama 3 70B Engine]
-    
-    G --> H["JSON Output Payload:\n- headline\n- act1 (The Spark)\n- act2 (The Fandom Metaphor)\n- act3 (The Vow)\n- colorPalette\n- memoriesList\n- dateLetterText"]
-    
-    H --> I[Backend Validation & Database Storage]
+### 🧠 How Pop-Culture Obsessions Become Metaphors
+
+```
+┌───────────────────────────┐
+│ User enters:              │
+│ "Obsession: Taylor Swift" │
+└─────────────┬─────────────┘
+              ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ INVISIBLE MASTER DIRECTIVE TO GROQ:                                         │
+│ "Weave their obsession into Act II as poetic metaphors of connection rather │
+│  than a plain list. Match the emotional tone to cinematic romance."         │
+└─────────────┬───────────────────────────────────────────────────────────────┘
+              ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ GROQ OUTPUT (Structured JSON):                                              │
+│ "Like an invisible string tying our worlds together, you turned every       │
+│  ordinary moment into something enchanted. You are my forever lover."       │
+└─────────────────────────────────────────────────────────────────────────────┘
 ```
 
-### Fanbase Metaphor Translation Examples:
-* **Taylor Swift**: Synthesizes lines around *"invisible strings"*, *"midnight conversations"*, and *"enchanted memories"*.
-* **Harry Potter**: Weaves in *"Golden Snitch finding"*, *"Patronus of joy"*, and *"After all this time? Always"*.
-* **Marvel / Sci-Fi**: Embeds themes of *"destiny across every multiverse"*.
+### 📋 Fanbase Translation Reference Matrix
 
----
-
-## 5. The No-Code 3D Engine & Template Injection Concept
-
-We do not generate new source code files for every website. Instead, the application utilizes a **Pre-Engineered Master 3D Skeleton Component** ([`RomanticProposal.tsx`](file:///c:/Users/ADNAN/OneDrive/Desktop/apology_web_maker/components/RomanticProposal.tsx)):
-
-```mermaid
-graph LR
-    subgraph Database["MongoDB Data Store"]
-        JSONData["Structured JSON Document\n{ partnerName, chapter1Text, promises, coupons, youtubeUrl }"]
-    end
-
-    subgraph MasterComponent["Master 3D Engine (RomanticProposal.tsx)"]
-        Slot1["Slot: Envelope Wax Seal Label"]
-        Slot2["Slot: Falling Rose Petals & Stardust Canvas"]
-        Slot3["Slot: Web Audio Synth Harp + YouTube Player"]
-        Slot4["Slot: 3D Perspective Card Whispers"]
-        Slot5["Slot: Interactive Constellation Star Map"]
-        Slot6["Slot: Redeemable Love Coupons"]
-        Slot7["Slot: Spring Physics Dodge Button"]
-    end
-
-    JSONData -->|Runtime State Injection| MasterComponent
-    MasterComponent --> RenderedDOM["✨ Fully Interactive Recipient Experience"]
-```
-
----
-
-## 6. Low-Level System Design & Database Models
-
-```mermaid
-erDiagram
-    USER ||--o{ APOLOGY : creates
-    USER ||--o{ ORDER : places
-    USER {
-        ObjectId _id PK
-        string name
-        string email UK
-        string passwordHash
-        string googleId
-        number tokens
-        string role
-        string resetToken
-        date resetTokenExpiry
-    }
-
-    APOLOGY {
-        ObjectId _id PK
-        ObjectId creatorId FK
-        string slug UK
-        string creatorName
-        string recipientName
-        string occasion
-        string theme
-        string youtubeUrl
-        string songName
-        string status
-        number viewCount
-        date firstViewedAt
-        object proposalData
-        object weddingData
-        object birthdayPartyData
-        object endingSurprise
-        object complimentStars
-        object dateInvitation
-        date createdAt
-    }
-
-    ORDER {
-        ObjectId _id PK
-        ObjectId userId FK
-        string orderId UK
-        string paymentId
-        string packId
-        number tokens
-        number amount
-        string currency
-        string status
-        string receipt
-        date createdAt
-    }
-
-    RATELIMIT {
-        ObjectId _id PK
-        string key UK
-        number count
-        date createdAt "TTL: 15m"
-    }
-
-    PROMOCODE {
-        ObjectId _id PK
-        string code UK
-        number discountPercent
-        number tokensGranted
-        number maxUses
-        number usedCount
-        date expiresAt
-    }
-```
-
----
-
-## 7. Web Audio API Digital Signal Processing (DSP) Pipeline
-
-The browser synthesizes dynamic acoustic harp plucks and ambient twilight pads locally without external audio streaming dependencies:
-
-```mermaid
-graph TD
-    subgraph DroneSynth["1. Warm Twilight Ambient Pad (Drone)"]
-        OscSine["5x Sine Oscillators\n(A2: 110Hz, E3: 164.8Hz, A3: 220Hz, C#4: 277.2Hz, E4: 329.6Hz)"]
-        LowpassDrone["BiquadFilter (Lowpass @ 340 Hz)"]
-        GainDrone["GainNode (Fixed Volume: 0.018)"]
-        OscSine --> LowpassDrone --> GainDrone
-    end
-
-    subgraph HarpSequencer["2. Acoustic Harp String Pluck Sequencer (540ms Clock)"]
-        OscTri["Triangle Oscillator\n(Cycling Pentatonic Frequency)"]
-        BiquadHarp["BiquadFilter (Lowpass @ Freq * 2.8)"]
-        GainEnvelope["GainNode (Exponential Ramp)\n0.048 -> 0.0001 over 1.8s"]
-        OscTri --> BiquadHarp --> GainEnvelope
-    end
-
-    GainDrone --> AudioDestination["🔊 Browser AudioDestination (Speaker Output)"]
-    GainEnvelope --> AudioDestination
-```
-
----
-
-## 8. HTML5 Canvas 60 FPS Particle Physics Engine
-
-```mermaid
-flowchart TD
-    Init["Initialize Canvas & Viewport Dimensions (W x H)"] --> Spawn["Spawn N Particles (Rose Petals, Star Dust, Blooms)"]
-    Spawn --> Loop["requestAnimationFrame(renderLoop)"]
-    
-    subgraph UpdateMath["Per-Frame Kinematic Equations"]
-        Loop --> PosY["y = y + speedY"]
-        PosY --> PosX["x = x + speedX"]
-        PosX --> Rot["angle = angle + rotationSpeed"]
-        Rot --> CheckBound{"y > Height + 20?"}
-        CheckBound -- Yes --> ResetTop["Reset to y = -20, random x"]
-        CheckBound -- No --> Draw["Draw Particle Geometry & Alpha"]
-        
-        Loop --> ShootingStarLogic["Poisson Timer (5s - 13s) -> Spawn Shooting Star"]
-        ShootingStarLogic --> DecayAlpha["Decay Trail Alpha (-0.025/frame)"]
-    end
-    
-    Draw --> Loop
-    DecayAlpha --> Loop
-```
-
----
-
-## 9. 3D Wax-Seal Envelope Finite State Machine (FSM)
-
-```mermaid
-stateDiagram-v2
-    [*] --> Sealed : Recipient arrives on URL
-
-    Sealed --> SealBroken : User clicks Wax Seal
-    note right of SealBroken : Trigger 65-particle confetti burst
-
-    SealBroken --> FlapOpen : Delay 300ms
-    note right of FlapOpen : Top envelope flap unfolds upward
-
-    FlapOpen --> LetterOut : Delay 400ms
-    note right of LetterOut : Letter slides upward out of envelope<br/>Audio Engine starts playing<br/>Grand Confetti burst (100 particles)
-
-    LetterOut --> FullSiteOpen : User clicks "Read Our Story"
-    note right of FullSiteOpen : Page scrolls into full 3D interactive story modules
-
-    FullSiteOpen --> Accepted : User clicks "YES!"
-    note right of Accepted : Triggers celebration modal & dispatches /api/respond-proposal
-```
-
----
-
-## 10. Cashfree Payment Gateway & Concurrency-Safe Token Credit
-
-```mermaid
-sequenceDiagram
-    autonumber
-    actor User as 👤 User
-    participant Modal as 💳 TokenStoreModal (Client)
-    participant CF_SDK as 🌐 Cashfree JS SDK v3
-    participant API as ⚙️ API (/api/payments/cashfree/*)
-    participant CF_Server as 🏦 Cashfree PG Server
-    participant DB as 🗄️ MongoDB Atlas
-
-    User->>Modal: Selects Token Pack ("Starter Pack - ₹49")
-    Modal->>API: POST /api/payments/cashfree/order { packId: "starter" }
-    API->>DB: Creates Order record (status: "created")
-    API->>CF_Server: POST /pg/orders (order_id, amount, customer_details)
-    CF_Server-->>API: Returns { payment_session_id: "session_xyz" }
-    API-->>Modal: Returns paymentSessionId
-    Modal->>CF_SDK: cashfree.checkout({ paymentSessionId, redirectTarget: "_modal" })
-    CF_SDK-->>User: Renders Drop-in UPI / Card Payment Window
-    User->>CF_SDK: Completes UPI/Card Payment
-    CF_SDK-->>Modal: Payment Complete callback
-    Modal->>API: POST /api/payments/cashfree/verify { orderId }
-    API->>CF_Server: GET /pg/orders/{orderId}
-    CF_Server-->>API: { order_status: "PAID", cf_order_id: "12345" }
-    
-    rect rgb(230, 245, 230)
-    Note over API,DB: Atomic Double-Spend Prevention
-    API->>DB: findOneAndUpdate({ orderId, status: { $ne: 'paid' } }, { $set: { status: 'paid' } })
-    API->>DB: User.findByIdAndUpdate(userId, { $inc: { tokens: pack.tokens } })
-    end
-
-    API-->>Modal: { success: true, tokensAdded: 3, newTokens: 4 }
-    Modal-->>User: Displays 🎉 Success + Instant Wallet Update
-```
-
----
-
-## 11. Security, Authentication & Rate Limiting
-
-| Security Domain | Mechanism Implemented | Implementation File |
+| Fanbase Provided | How Groq Weaves It Into Story Chapters & Vows | Visual Backdrop Matching |
 | :--- | :--- | :--- |
-| **Password Security** | Bcrypt with salt cost factor 10 | [`app/api/auth/signup/route.ts`](file:///c:/Users/ADNAN/OneDrive/Desktop/apology_web_maker/app/api/auth/signup/route.ts) |
-| **Session Cryptography** | `HS256` JWT cookies with `httpOnly`, `sameSite: "lax"`, `secure` | [`lib/session.ts`](file:///c:/Users/ADNAN/OneDrive/Desktop/apology_web_maker/lib/session.ts) |
-| **API Rate Limiting** | Sliding window IP limiter (Max 5 generations/minute, Max 10 logins/minute) | [`lib/rateLimit.ts`](file:///c:/Users/ADNAN/OneDrive/Desktop/apology_web_maker/lib/rateLimit.ts) |
-| **DDoS & Header Shield** | HSTS (`max-age=63072000`), `X-Frame-Options: SAMEORIGIN`, `X-Content-Type-Options: nosniff` | [`next.config.ts`](file:///c:/Users/ADNAN/OneDrive/Desktop/apology_web_maker/next.config.ts) |
-| **Private Envelopes** | Optional recipient passcodes stored as cryptographic hashes | [`app/api/verify-passcode/route.ts`](file:///c:/Users/ADNAN/OneDrive/Desktop/apology_web_maker/app/api/verify-passcode/route.ts) |
+| **Taylor Swift** | References *"invisible strings"*, *"enchanted memories"*, and *"midnight conversations"*. | Lavender haze aesthetic skies |
+| **Harry Potter** | Uses *"Golden Snitch"*, *"Patronus of joy"*, and *"After all this time? Always"*. | Warm candlelight / starry library |
+| **Marvel / Sci-Fi** | Blends metaphors of *"in every universe, across every timeline, my heart finds you"*. | Cosmic galaxy & nebula backdrops |
+| **Anime / Romance** | Weaves *"the red string of fate"* and *"destined cross-paths"*. | Soft cherry blossom landscapes |
 
 ---
 
-## 12. Deployment Topology & Cloud Infrastructure
+## 5. The No-Code 3D Engine & Dynamic Slot Injection
 
-```mermaid
-graph TB
-    subgraph SourceControl["GitHub Repository"]
-        Repo["adnanlj/sealedvibe (main branch)"]
-    end
+SealedVibe does **not** generate new code files when someone creates a website. Instead, the application uses a **Master Interactive 3D Skeleton Component** (`RomanticProposal.tsx` / `ApologyClient.tsx`).
 
-    subgraph CI_CD["Vercel Build & Deployment Pipeline"]
-        Webhook["GitHub Webhook Trigger"]
-        NextBuild["Next.js Production Optimizer & Bundle Generator"]
-        EdgeDeployment["Deploy to Global Edge Serverless Pods"]
-    end
+```
+=========================================================================================
+                           MASTER 3D ENGINE (RomanticProposal.tsx)
+=========================================================================================
 
-    subgraph LiveDomain["Production Domain (sealedvibe.in)"]
-        LiveSite["https://sealedvibe.in\n(Vercel Global Edge CDN)"]
-        Analytics["Vercel Web Analytics (@vercel/analytics)"]
-    end
+  [Slot: Wax Seal] ───────> Injects: Recipient Name & Creator Name
+  
+  [Slot: Background] ─────> Injects: Falling Rose Petals Canvas + Unsplash Aesthetic Photo
+  
+  [Slot: Audio Engine] ───> Injects: YouTube Track OR Web Audio Harp Synthesizer
+  
+  [Slot: Story Module] ───> Injects: Act I (Meeting), Act II (Metaphor), Act III (The Vow)
+  
+  [Slot: Constellations] ─> Injects: 3 Interactive Star Alignment Nodes & Celestial Quotes
+  
+  [Slot: Love Coupons] ───> Injects: 3 Redeemable Passes ("1x Warm Hug", "1x Late Drive")
+  
+  [Slot: Secret Whispers] ─> Injects: 3D CSS Perspective Flip Cards with Hidden Love Letters
+  
+  [Slot: Dodge Button] ───> Injects: Spring Physics Evasion Game for the "No" button
+  
+  [Slot: YES Finale] ─────> Injects: 180-Particle Confetti Shower + Partner Reply Form
+=========================================================================================
+```
 
-    Repo -->|git push origin main| Webhook
-    Webhook --> NextBuild
-    NextBuild --> EdgeDeployment
-    EdgeDeployment --> LiveSite
-    LiveSite --> Analytics
+When a user visits `https://sealedvibe.in/p/their-slug`, the master component mounts, fetches the stored JSON, and fills each slot in less than **100 milliseconds**.
+
+---
+
+## 6. Low-Level Database Architecture & Entity Models
+
+The application utilizes **MongoDB Atlas** managed via **Mongoose**. Below are the core database schemas and their relationships:
+
+```
+┌──────────────────────────┐               ┌──────────────────────────┐
+│          USER            │               │         APOLOGY          │
+├──────────────────────────┤ 1           * ├──────────────────────────┤
+│ _id: ObjectId (PK)       │──────────────<│ _id: ObjectId (PK)       │
+│ name: String             │               │ creatorId: ObjectId (FK) │
+│ email: String (Unique)   │               │ slug: String (Unique)    │
+│ passwordHash: String     │               │ creatorName: String      │
+│ googleId: String         │               │ recipientName: String    │
+│ tokens: Number           │               │ occasion: String         │
+│ role: 'user' | 'admin'   │               │ proposalData: Object     │
+│ resetToken: String       │               │ viewCount: Number        │
+│ resetTokenExpiry: Date   │               │ firstViewedAt: Date      │
+└────────────┬─────────────┘               │ status: 'pending'|'paid' │
+             │                             └──────────────────────────┘
+             │ 1
+             │
+             │ *
+┌────────────▼─────────────┐
+│          ORDER           │
+├──────────────────────────┤
+│ _id: ObjectId (PK)       │
+│ userId: ObjectId (FK)    │
+│ orderId: String (Unique) │
+│ paymentId: String        │
+│ packId: String           │
+│ tokens: Number           │
+│ amount: Number (INR)     │
+│ status: 'created'|'paid' │
+│ receipt: String          │
+└──────────────────────────┘
+```
+
+### Data Dictionary
+
+1. **`User` (`models/User.ts`)**: Manages authentication, OAuth identities, password hashes, and the user's available token balance for site creation.
+2. **`Apology` (`models/Apology.ts`)**: Stores the full payload of a personalized site (chapters, promises, coupons, YouTube song, passcode, read receipts, and partner reply notes).
+3. **`Order` (`models/Order.ts`)**: Tracks payment orders initiated via Cashfree, payment verification IDs, and token fulfillment statuses.
+4. **`RateLimit` (`models/RateLimit.ts`)**: Implements IP-based sliding window rate limiting with a 15-minute MongoDB TTL (Time-To-Live) index for automatic record cleanup.
+
+---
+
+## 7. Digital Audio Processing (Web Audio API Synthesizer)
+
+To ensure romantic background music plays even when external YouTube links are absent or blocked, SealedVibe features a **pure client-side Web Audio API synthesizer** (`RomanticProposalAudioEngine` in `RomanticProposal.tsx`):
+
+```
+                               AUDIO DSP ROUTING GRAPH
+                               
+┌────────────────────────────────┐
+│  5x SINE OSCILLATORS           │
+│  Fundamental Chord Frequencies:│
+│  A2 (110.0 Hz), E3 (164.8 Hz)  │───> [ Lowpass Filter ] ───> [ Gain Node ] ──┐
+│  A3 (220.0 Hz), C#4 (277.2 Hz) │     (Cutoff: 340 Hz)        (Fixed: 0.018)  │
+│  E4 (329.6 Hz)                 │                                             │
+└────────────────────────────────┘                                             │
+                                                                               ├─> [ 🔊 AudioDestination ]
+┌────────────────────────────────┐                                             │   (Speaker / Headphones)
+│  TRIANGLE OSCILLATOR           │                                             │
+│  Pentatonic Melody Sequencer:  │───> [ Biquad Filter ]  ───> [ Gain Node ] ──┘
+│  Notes: 220 Hz - 880 Hz        │     (Cutoff: Freq*2.8)      (Exponential Decay)
+│  Trigger Clock: Every 540ms    │                             0.048 ➔ 0.0001 over 1.8s
+└────────────────────────────────┘
+```
+
+* **Ambient Twilight Pad**: 5 sine oscillators generate a soothing drone filtered through a 340 Hz lowpass filter to eliminate harsh frequencies.
+* **Acoustic Harp Pluck**: A triangle oscillator plays a pentatonic acoustic melody. Each pluck triggers an exponential volume ramp that decays smoothly over 1.8 seconds, simulating a physical plucked string.
+
+---
+
+## 8. 60-FPS Canvas Physics & Particle Simulation
+
+The ambient drifting rose petals, stardust, and shooting stars run entirely on the recipient's GPU via an **HTML5 Canvas 60 FPS animation loop**:
+
+```
+                       CANVAS KINEMATIC UPDATE CYCLE
+                       
+     ┌────────────────────────────────────────────────────────┐
+     │  1. Clear Canvas Frame (clearRect)                     │
+     └───────────────────────────┬────────────────────────────┘
+                                 ▼
+     ┌────────────────────────────────────────────────────────┐
+     │  2. Update Position:                                   │
+     │     y = y + speedY                                     │
+     │     x = x + speedX                                     │
+     │     angle = angle + rotationSpeed                      │
+     └───────────────────────────┬────────────────────────────┘
+                                 ▼
+     ┌────────────────────────────────────────────────────────┐
+     │  3. Boundary Check:                                    │
+     │     If (y > ScreenHeight + 20) ➔ Reset y = -20         │
+     │     Spawn at random x across screen width              │
+     └───────────────────────────┬────────────────────────────┘
+                                 ▼
+     ┌────────────────────────────────────────────────────────┐
+     │  4. Shooting Star Generator (Poisson Timer: 5s - 13s)  │
+     │     Speed = 7-12 px/frame, Trail Length = 70-120 px    │
+     │     Alpha Decay = -0.025 per frame                     │
+     └───────────────────────────┬────────────────────────────┘
+                                 ▼
+     ┌────────────────────────────────────────────────────────┐
+     │  5. Render Geometry (Bézier Petal / Arc Stardust)      │
+     └───────────────────────────┬────────────────────────────┘
+                                 ▼
+     ┌────────────────────────────────────────────────────────┐
+     │  6. requestAnimationFrame(renderLoop)                  │
+     └────────────────────────────────────────────────────────┘
 ```
 
 ---
-*Document generated for **SealedVibe Architecture Standard (2026)**.*
+
+## 9. Recipient Unboxing: 3D Envelope Finite State Machine
+
+The recipient unboxing journey follows a deterministic, 5-stage animation state machine:
+
+```
+[ State: "sealed" ]
+   │
+   │  Recipient taps on Wax Seal
+   ▼
+[ State: "seal_broken" ]  ───► Confetti burst (65 particles)
+   │
+   │  Wait 300ms
+   ▼
+[ State: "flap_open" ]    ───► Envelope top flap unfolds upward in 3D
+   │
+   │  Wait 400ms
+   ▼
+[ State: "letter_out" ]   ───► Letter slides out + Background music starts + 100-particle confetti
+   │
+   │  Recipient clicks "Enter Full Website"
+   ▼
+[ State: "full_site_open" ] ─► Page scrolls smoothly into Story Chapters, Vows, Star Map & Dodge Game
+```
+
+---
+
+## 10. Cashfree Payment Lifecycle & Concurrency Control
+
+To ensure complete financial integrity and prevent double-crediting of token packs, the payment architecture uses atomic operations:
+
+```
+CUSTOMER                        TOKEN STORE MODAL                  SEALEDVIBE API                  CASHFREE PG
+   │                                    │                                 │                             │
+   │─── 1. Selects Token Pack ─────────>│                                 │                             │
+   │       ("Starter Pack - ₹49")       │                                 │                             │
+   │                                    │─── 2. POST /api/payments/order ─>│                            │
+   │                                    │       { packId: "starter" }     │                             │
+   │                                    │                                 │─── 3. Create PG Session ───>│
+   │                                    │<── 4. Returns paymentSessionId ──┤<── 4. Returns Session ID ───┤
+   │                                    │                                 │                             │
+   │                                    │─── 5. Opens Cashfree Modal ──────────────────────────────────>│
+   │<── 6. Pays via UPI / Card / NetBanking ────────────────────────────────────────────────────────────│
+   │                                    │<── 7. Checkout Success Callback ──────────────────────────────┤
+   │                                    │                                 │                             │
+   │                                    │─── 8. POST /api/payments/verify ─>│                           │
+   │                                    │       { orderId }               │─── 9. Queries Status ──────>│
+   │                                    │                                 │<── 10. order_status: PAID ──┤
+   │                                    │                                 │                             │
+   │                                    │                                 │── [ Atomic Lock Check ] ────┐
+   │                                    │                                 │   Order status != 'paid'?   │
+   │                                    │                                 │   Set status = 'paid'       │
+   │                                    │                                 │   User.tokens += pack.tokens│
+   │                                    │                                 │◄── [ End Atomic Lock ] ─────┘
+   │                                    │                                 │
+   │<── 11. Modal displays success & updated tokens ──────────────────────┤
+```
+
+---
+
+## 11. Security, Authentication & Rate-Limiting Shield
+
+| Layer | Implementation | Protection Mechanism |
+| :--- | :--- | :--- |
+| **Passwords** | Bcrypt (Work Factor 10) | One-way cryptographic hashing against rainbow table attacks. |
+| **Sessions** | JWT Signed with HS256 (`lib/session.ts`) | Stored in `httpOnly`, `sameSite: "lax"`, and `secure` cookies to block XSS theft. |
+| **API Rate Limiting** | Sliding Window via MongoDB TTL (`lib/rateLimit.ts`) | Caps website generation at 5 requests/min and auth attempts at 10 requests/min. |
+| **Headers** | Next.js Security Headers (`next.config.ts`) | `Strict-Transport-Security` (HSTS), `X-Frame-Options: SAMEORIGIN`, and `X-Content-Type-Options: nosniff`. |
+| **Passcode Locks** | Recipient Envelopes (`/api/verify-passcode`) | Allows creators to password-protect sensitive anniversary/apology letters. |
+
+---
+
+## 12. Cloud Infrastructure, Vercel Serverless & Deployment
+
+```
+┌─────────────────────────────────┐
+│     GITHUB REPOSITORY           │
+│     adnanlj/sealedvibe          │
+└────────────────┬────────────────┘
+                 │ git push origin main
+                 ▼
+┌─────────────────────────────────┐
+│   VERCEL CI/CD PIPELINE         │
+│ • Production Bundle Optimizer   │
+│ • Turbopack Next.js Compiler    │
+│ • Extended MaxDuration: 30s     │
+└────────────────┬────────────────┘
+                 │ Automatic Deploy
+                 ▼
+┌─────────────────────────────────────────────────────────────┐
+│                 LIVE PRODUCTION DEPLOYMENT                  │
+│               Domain: https://sealedvibe.in                 │
+│                                                             │
+│ • Serverless Compute: 100,000 requests/day (Free Tier)      │
+│ • Edge CDN Bandwidth: 100 GB/month (100,000+ monthly visits)│
+│ • Telemetry: Real-time traffic via @vercel/analytics        │
+└─────────────────────────────────────────────────────────────┘
+```
+
+---
+
+### 📊 Summary Checklist
+
+* ✅ **High-Level System Design**: Documented with visual ASCII architecture maps.
+* ✅ **Low-Level Specifications**: Documented with exact database schemas, DSP audio routing, and canvas physics equations.
+* ✅ **Backstage AI Mechanics**: Full walkthrough of Groq system prompts and fandom metaphor weaving.
+* ✅ **Rendering & No-Code Mechanism**: Detailed explanation of dynamic JSON slot injection.
+* ✅ **Payments & Security**: Detailed Cashfree concurrency control, rate limiting, and session security.
+
+*Document maintained under the **SealedVibe Engineering Standard**.*
